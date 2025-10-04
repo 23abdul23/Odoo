@@ -76,7 +76,7 @@ router.post("/create", authenticate, async (req, res) => {
       description,
       date,
       receiptUrl: receiptUrl || "",
-      status: "Pending",
+      status: "In Review", // Changed from "Pending" to "In Review"
     })
 
     // Determine approval sequence
@@ -96,7 +96,31 @@ router.post("/create", authenticate, async (req, res) => {
           },
         ]
       }
-      expense.status = "In Review"
+    } else {
+      // If no rule matches, assign to employee's manager (default approval flow)
+      const employee = await User.findById(req.user._id)
+      if (employee.managerId) {
+        expense.approvals = [
+          {
+            approverId: employee.managerId,
+            status: "Pending",
+          },
+        ]
+      } else {
+        // If no manager, find any Admin in the company
+        const admin = await User.findOne({
+          companyId: req.user.companyId,
+          role: "Admin",
+        })
+        if (admin) {
+          expense.approvals = [
+            {
+              approverId: admin._id,
+              status: "Pending",
+            },
+          ]
+        }
+      }
     }
 
     await expense.save()

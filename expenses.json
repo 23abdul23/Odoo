@@ -1,0 +1,297 @@
+[{
+  "_id": {
+    "$oid": "68e0b2421450a46e3ea63bdd"
+  },
+  "employeeId": {
+    "$oid": "68e0b1fc1450a46e3ea63bc1"
+  },
+  "companyId": {
+    "$oid": "68e0b1fc1450a46e3ea63bbf"
+  },
+  "amount": 12000,
+  "currency": "USD",
+  "convertedAmount": 20040,
+  "category": "Travel",
+  "description": "travel",
+  "date": {
+    "$date": "2025-10-04T00:00:00.000Z"
+  },
+  "receiptUrl": "",
+  "status": "Pending",
+  "currentApprovalLevel": 0,
+  "approvals": [],
+  "comments": [],
+  "createdAt": {
+    "$date": "2025-10-04T05:36:02.181Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-04T05:36:02.181Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68e0b8d2de91a213cf4b10d0"
+  },
+  "employeeId": {
+    "$oid": "68e0b2781450a46e3ea63bf3"
+  },
+  "companyId": {
+    "$oid": "68e0b1fc1450a46e3ea63bbf"
+  },
+  "amount": 1233,
+  "currency": "USD",
+  "convertedAmount": 2059.11,
+  "category": "Travel",
+  "description": "Travel",
+  "date": {
+    "$date": "2025-10-03T00:00:00.000Z"
+  },
+  "receiptUrl": "",
+  "status": "Pending",
+  "currentApprovalLevel": 0,
+  "approvals": [],
+  "comments": [],
+  "createdAt": {
+    "$date": "2025-10-04T06:04:02.826Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-04T06:04:02.826Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68e0c189de91a213cf4b1169"
+  },
+  "employeeId": {
+    "$oid": "68e0bbaede91a213cf4b1120"
+  },
+  "companyId": {
+    "$oid": "68e0b1fc1450a46e3ea63bbf"
+  },
+  "amount": 500,
+  "currency": "INR",
+  "convertedAmount": 9.4,
+  "category": "Food",
+  "description": "Food in Office",
+  "date": {
+    "$date": "2025-05-07T00:00:00.000Z"
+  },
+  "receiptUrl": "",
+  "status": "Approved",
+  "currentApprovalLevel": 0,
+  "approvals": [
+    {
+      "approverId": {
+        "$oid": "68e0b1fc1450a46e3ea63bc1"
+      },
+      "status": "Approved",
+      "comments": "",
+      "_id": {
+        "$oid": "68e0c189de91a213cf4b116e"
+      },
+      "approvedAt": {
+        "$date": "2025-10-04T06:43:15.526Z"
+      }
+    }
+  ],
+  "comments": [
+    {
+      "userId": {
+        "$oid": "68e0b1fc1450a46e3ea63bc1"
+      },
+      "comment": "good",
+      "_id": {
+        "$oid": "68e0c203de91a213cf4b1218"
+      },
+      "createdAt": {
+        "$date": "2025-10-04T06:43:15.530Z"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2025-10-04T06:41:13.667Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-04T06:43:15.534Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "68e0c261de91a213cf4b1240"
+  },
+  "employeeId": {
+    "$oid": "68e0b2781450a46e3ea63bf3"
+  },
+  "companyId": {
+    "$oid": "68e0b1fc1450a46e3ea63bbf"
+  },
+  "amount": 200,
+  "currency": "USD",
+  "convertedAmount": 334,
+  "category": "Accommodation",
+  "description": "Hotel Stay",
+  "date": {
+    "$date": "2025-09-16T00:00:00.000Z"
+  },
+  "receiptUrl": "",
+  "status": "Pending",
+  "currentApprovalLevel": 0,
+  "approvals": [],
+  "comments": [],
+  "createdAt": {
+    "$date": "2025-10-04T06:44:49.689Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-04T06:44:49.689Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68e0c324de91a213cf4b124d"
+  },
+  "employeeId": {
+    "$oid": "68e0bbaede91a213cf4b1120"
+  },
+  "companyId": {
+    "$oid": "68e0b1fc1450a46e3ea63bbf"
+  },
+  "amount": 200,
+  "currency": "USD",
+  "convertedAmount": 334,
+  "category": "Travel",
+  "description": "Travell home",
+  "date": {
+    "$date": "2025-09-16T00:00:00.000Z"
+  },
+  "receiptUrl": "",
+  "status": "In Review",
+  "currentApprovalLevel": 0,
+  "approvals": [
+    {
+      "approverId": {
+        "$oid": "68e0b1fc1450a46e3ea63bc1"
+      },
+      "status": "Pending",
+      "comments": "",
+      "_id": {
+        "$oid": "68e0c324de91a213cf4b1252"
+      }
+    }
+  ],
+  "comments": [],
+  "createdAt": {
+    "$date": "2025-10-04T06:48:04.562Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-04T06:48:04.562Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68e0c482de91a213cf4b1275"
+  },
+  "employeeId": {
+    "$oid": "68e0b1fc1450a46e3ea63bc1"
+  },
+  "companyId": {
+    "$oid": "68e0b1fc1450a46e3ea63bbf"
+  },
+  "amount": 600,
+  "currency": "USD",
+  "convertedAmount": 1002,
+  "category": "Travel",
+  "description": "Travel",
+  "date": {
+    "$date": "2025-09-18T00:00:00.000Z"
+  },
+  "receiptUrl": "",
+  "status": "In Review",
+  "currentApprovalLevel": 0,
+  "approvals": [
+    {
+      "approverId": {
+        "$oid": "68e0bbaede91a213cf4b1120"
+      },
+      "status": "Pending",
+      "comments": "",
+      "_id": {
+        "$oid": "68e0c482de91a213cf4b1279"
+      }
+    },
+    {
+      "approverId": {
+        "$oid": "68e0b1fc1450a46e3ea63bc1"
+      },
+      "status": "Pending",
+      "comments": "",
+      "_id": {
+        "$oid": "68e0c482de91a213cf4b127a"
+      }
+    }
+  ],
+  "comments": [],
+  "createdAt": {
+    "$date": "2025-10-04T06:53:54.333Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-04T06:53:54.333Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68e0c4cafb301148eeda44a0"
+  },
+  "employeeId": {
+    "$oid": "68e0b2781450a46e3ea63bf3"
+  },
+  "companyId": {
+    "$oid": "68e0b1fc1450a46e3ea63bbf"
+  },
+  "amount": 600,
+  "currency": "USD",
+  "convertedAmount": 1002,
+  "category": "Travel",
+  "description": "Home travel",
+  "date": {
+    "$date": "2025-09-18T00:00:00.000Z"
+  },
+  "receiptUrl": "",
+  "status": "In Review",
+  "currentApprovalLevel": 0,
+  "approvals": [
+    {
+      "approverId": {
+        "$oid": "68e0bbaede91a213cf4b1120"
+      },
+      "status": "Pending",
+      "comments": "",
+      "_id": {
+        "$oid": "68e0c4cbfb301148eeda44a4"
+      }
+    },
+    {
+      "approverId": {
+        "$oid": "68e0b1fc1450a46e3ea63bc1"
+      },
+      "status": "Pending",
+      "comments": "",
+      "_id": {
+        "$oid": "68e0c4cbfb301148eeda44a5"
+      }
+    }
+  ],
+  "comments": [],
+  "createdAt": {
+    "$date": "2025-10-04T06:55:07.036Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-04T06:55:07.036Z"
+  },
+  "__v": 0
+}]
