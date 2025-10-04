@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from "../store/authSlice"
+import ChangePassword from "./ChangePassword"
 
 export default function Layout({ children }) {
   const navigate = useNavigate()
@@ -27,6 +28,7 @@ export default function Layout({ children }) {
               <span className="text-sm text-gray-600">
                 {user?.name} ({user?.role})
               </span>
+              <ChangePassword />
               <button
                 onClick={handleLogout}
                 className="px-4 py-2 text-sm font-medium text-white bg-danger rounded-lg hover:bg-red-600 transition"
