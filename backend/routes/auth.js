@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import User from "../models/User.js"
 import Company from "../models/Company.js"
+import { authenticate } from "../middleware/auth.js"
 import { log } from "console"
 
 const router = express.Router()
@@ -102,6 +103,46 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     console.error("Login error:", error)
     res.status(500).json({ message: "Server error during login" })
+  }
+})
+
+// Change Password
+router.post("/change-password", authenticate, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body
+
+    // Validate input
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "Current password and new password are required" })
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "New password must be at least 6 characters" })
+    }
+
+    // Find user
+    const user = await User.findById(req.user._id)
+    if (!user) {
+      return res.status(404).json({ message: "User not found" })
+    }
+
+    // Verify current password
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password)
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Current password is incorrect" })
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 12)
+
+    // Update password
+    user.password = hashedPassword
+    await user.save()
+
+    res.json({ message: "Password changed successfully" })
+  } catch (error) {
+    console.error("Change password error:", error)
+    res.status(500).json({ message: "Server error changing password" })
   }
 })
 
