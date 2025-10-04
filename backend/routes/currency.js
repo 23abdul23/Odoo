@@ -1,5 +1,9 @@
 import express from "express"
 import axios from "axios"
+import fs from 'fs'
+
+import country from '../countries_currency.json' with { type : 'json'} 
+
 
 const router = express.Router()
 
@@ -17,8 +21,16 @@ router.get("/countries", async (req, res) => {
 
     res.json({ countries: countries.sort((a, b) => a.name.localeCompare(b.name)) })
   } catch (error) {
-    console.error("Get countries error:", error)
-    res.status(500).json({ message: "Server error fetching countries" })
+
+    const countries = country.map((country) => {
+      const currencies = country.currencies ? Object.keys(country.currencies) : []
+      return {
+        name: country.name.common,
+        currency: currencies[0] || "USD",
+      }
+    })
+
+    res.json({ countries: countries.sort((a, b) => a.name.localeCompare(b.name)) })
   }
 })
 
