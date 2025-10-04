@@ -31,6 +31,8 @@ export default function SubmitExpense() {
   const fetchCurrencies = async () => {
     try {
       const response = await axios.get("/currency/rates/USD")
+      console.log(response.data)
+      
       const currencyList = Object.keys(response.data.rates).sort()
       setCurrencies(currencyList)
     } catch (err) {
