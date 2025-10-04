@@ -1,0 +1,62 @@
+[{
+  "_id": {
+    "$oid": "68e0b1fc1450a46e3ea63bc1"
+  },
+  "name": "Afzal Raja",
+  "email": "afzalraja031@gmail.com",
+  "password": "$2a$12$dmEg8woQFr6fYTkoL9Ef4.DThduPnpUmMSsuHNw4mXr8FohrLBy7a",
+  "role": "Admin",
+  "managerId": null,
+  "companyId": {
+    "$oid": "68e0b1fc1450a46e3ea63bbf"
+  },
+  "createdAt": {
+    "$date": "2025-10-04T05:34:52.849Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-04T05:34:52.849Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68e0b2781450a46e3ea63bf3"
+  },
+  "name": "hello",
+  "email": "hello@gmail.com",
+  "password": "$2a$12$hK3tJBqNqju0yJzIk8w2D.qbiCL47E2BNx0AV6iWoWJtXC/6vKHde",
+  "role": "Employee",
+  "managerId": null,
+  "companyId": {
+    "$oid": "68e0b1fc1450a46e3ea63bbf"
+  },
+  "createdAt": {
+    "$date": "2025-10-04T05:36:56.969Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-04T05:36:56.969Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68e0bbaede91a213cf4b1120"
+  },
+  "name": "manager 1",
+  "email": "manger@gmail.com",
+  "password": "$2a$12$R/NxpW.wT6W21SYfLzzbX.sSVkiHqn1RE.txQ/MeR6kg53sHlaKRS",
+  "role": "Manager",
+  "managerId": {
+    "$oid": "68e0b1fc1450a46e3ea63bc1"
+  },
+  "companyId": {
+    "$oid": "68e0b1fc1450a46e3ea63bbf"
+  },
+  "createdAt": {
+    "$date": "2025-10-04T06:16:14.937Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-04T06:16:14.937Z"
+  },
+  "__v": 0
+}]
