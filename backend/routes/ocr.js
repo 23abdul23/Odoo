@@ -1,122 +1,101 @@
-import express from "express"
-import multer from "multer"
-import Tesseract from "tesseract.js"
-import { authenticate } from "../middleware/auth.js"
-import path from "path"
-import fs from "fs"
+import express from "express";
+import multer from "multer";
+import path, { parse } from "path";
+import fs from "fs";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { authenticate } from "../middleware/auth.js";
 
-const router = express.Router()
+const router = express.Router();
 
-// Configure multer for file uploads
+// Initialize Gemini client
+const llm = new GoogleGenerativeAI("AIzaSyDbn2XVIfoxwfzTPiwn31nxRbjfdQAgVOw");
+
+// Multer setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = "uploads/"
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir)
-    }
-    cb(null, uploadDir)
+    const uploadDir = "uploads/";
+    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9)
-    cb(null, uniqueSuffix + path.extname(file.originalname))
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
   },
-})
+});
 
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|pdf/
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase())
-    const mimetype = allowedTypes.test(file.mimetype)
+const upload = multer({ storage });
 
-    if (mimetype && extname) {
-      return cb(null, true)
-    } else {
-      cb(new Error("Only image files (JPEG, PNG) and PDFs are allowed"))
-    }
-  },
-})
-
-// Helper function to extract expense data from text
-function extractExpenseData(text) {
-  const data = {
-    amount: null,
-    date: null,
-    category: "Other",
-    description: "",
-  }
-
-  // Extract amount (look for currency symbols and numbers)
-  const amountRegex = /(?:USD|EUR|GBP|\$|€|£)\s*(\d+(?:\.\d{2})?)|(\d+(?:\.\d{2})?)\s*(?:USD|EUR|GBP|\$|€|£)/gi
-  const amountMatch = text.match(amountRegex)
-  if (amountMatch) {
-    const numMatch = amountMatch[0].match(/\d+(?:\.\d{2})?/)
-    if (numMatch) {
-      data.amount = Number.parseFloat(numMatch[0])
-    }
-  }
-
-  // Extract date
-  const dateRegex = /\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{4}[/-]\d{1,2}[/-]\d{1,2}/g
-  const dateMatch = text.match(dateRegex)
-  if (dateMatch) {
-    data.date = dateMatch[0]
-  }
-
-  // Detect category based on keywords
-  const lowerText = text.toLowerCase()
-  if (lowerText.includes("hotel") || lowerText.includes("accommodation")) {
-    data.category = "Accommodation"
-  } else if (lowerText.includes("restaurant") || lowerText.includes("food") || lowerText.includes("meal")) {
-    data.category = "Food"
-  } else if (lowerText.includes("taxi") || lowerText.includes("uber") || lowerText.includes("transport")) {
-    data.category = "Transportation"
-  } else if (lowerText.includes("flight") || lowerText.includes("airline") || lowerText.includes("train")) {
-    data.category = "Travel"
-  } else if (lowerText.includes("office") || lowerText.includes("supplies") || lowerText.includes("stationery")) {
-    data.category = "Office Supplies"
-  }
-
-  // Use first line as description
-  const lines = text.split("\n").filter((line) => line.trim().length > 0)
-  if (lines.length > 0) {
-    data.description = lines[0].substring(0, 100)
-  }
-
-  return data
+// Convert image to base64 for Gemini
+function imageToBase64(filePath) {
+  const data = fs.readFileSync(filePath);
+  return data.toString("base64");
 }
 
-// Upload and process receipt
+// Upload and process receipt with Gemini
 router.post("/upload", authenticate, upload.single("receipt"), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" })
+    if (!req.file) return res.status(400).json({ message: "No file uploaded" });
+
+    const filePath = req.file.path;
+    const base64Image = imageToBase64(filePath);
+    console.log("✅ File received:", req.file);
+    console.log("🖼️ Base64 length:", base64Image.length);
+    console.log("🧾 MIME type:", req.file.mimetype);
+
+
+    // Use Gemini for OCR + understanding
+    const model = llm.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const prompt = `
+      You are an expense receipt parser.
+      Extract and return a JSON object with the following keys:
+      - amount (numeric)
+      - date (YYYY-MM-DD)
+      - category (one of: Food, Travel, Transportation, Accommodation, Office Supplies, Other)
+      - description (short summary)
+      If a field is missing, set it to null.
+    `;
+
+    const result = await model.generateContent([
+      { text: prompt },
+      {
+        inlineData: {
+          mimeType: req.file.mimetype,
+          data: base64Image,
+        },
+      },
+    ]);
+
+    const textResponse = result.response.text();
+    console.log("🤖 Gemini response:", textResponse);
+    // Attempt to parse JSON
+    let parsedData;
+    try {
+      // Remove Markdown code fences and extra formatting
+      const cleanText = textResponse
+        .replace(/```json/gi, "")
+        .replace(/```/g, "")
+        .replace(/[\r\n]+/g, "\n") // normalize newlines
+        .trim();
+
+      parsedData = JSON.parse(cleanText);
+    } catch (e) {
+      console.warn("⚠️ Failed to parse Gemini JSON, returning raw text.");
+      parsedData = { rawResponse: textResponse };
     }
-
-    const filePath = req.file.path
-
-    // Process image with Tesseract
-    const {
-      data: { text },
-    } = await Tesseract.recognize(filePath, "eng", {
-      logger: (m) => console.log(m),
-    })
-
-    // Extract expense data from OCR text
-    const expenseData = extractExpenseData(text)
-
-    // Return the file URL and extracted data
+    console.log(parsedData)
     res.json({
       message: "Receipt processed successfully",
       receiptUrl: `/uploads/${req.file.filename}`,
-      extractedData: expenseData,
-      rawText: text,
-    })
+      extractedData: parsedData,
+    });
   } catch (error) {
-    console.error("OCR processing error:", error)
-    res.status(500).json({ message: "Error processing receipt" })
+    console.error("Gemini OCR error:", error);
+    res.status(500).json({ message: "Error processing receipt" });
   }
-})
+});
 
-export default router
+
+
+
+
+export default router;
