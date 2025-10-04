@@ -59,11 +59,12 @@ async function determineApprovalSequence(expense, companyId) {
 // Create expense
 router.post("/create", authenticate, async (req, res) => {
   try {
-    const { amount, currency, category, description, date, receiptUrl } = req.body
-
+    let { amount, currency, category, description, date, receiptUrl } = req.body
+    console.log("Create expense request body:", req.body)
     // Get company currency
     const company = await Company.findById(req.user.companyId)
     const convertedAmount = await convertCurrency(amount, currency, company.currency)
+    currency=company.currency
 
     // Create expense
     const expense = new Expense({
