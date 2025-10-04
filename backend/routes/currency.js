@@ -10,7 +10,9 @@ const router = express.Router()
 // Get all countries with currencies
 router.get("/countries", async (req, res) => {
   try {
-    const response = await axios.get("https://restcountries.com/v3.1/all?fields=name,currencies")
+    const response = await fetch("https://restcountries.com/v3.1/all?fields=name,currencies")
+
+    console.log(response.data)
     const countries = response.data.map((country) => {
       const currencies = country.currencies ? Object.keys(country.currencies) : []
       return {
@@ -22,6 +24,7 @@ router.get("/countries", async (req, res) => {
     res.json({ countries: countries.sort((a, b) => a.name.localeCompare(b.name)) })
   } catch (error) {
 
+    console.log("Using the Fallback")
     const countries = country.map((country) => {
       const currencies = country.currencies ? Object.keys(country.currencies) : []
       return {
@@ -38,13 +41,16 @@ router.get("/countries", async (req, res) => {
 router.get("/rates/:baseCurrency", async (req, res) => {
   try {
     const { baseCurrency } = req.params
-    const response = await axios.get(`https://api.exchangerate-api.com/v4/latest/${baseCurrency}`)
+    const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${baseCurrency}`)
+    const data = await response.json()
+
 
     res.json({
-      base: response.data.base,
-      rates: response.data.rates,
-      date: response.data.date,
+      base: data.base,
+      rates: data.rates,
+      date: data.date,
     })
+
   } catch (error) {
     console.error("Get exchange rates error:", error)
     res.status(500).json({ message: "Server error fetching exchange rates" })
